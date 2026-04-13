@@ -1,26 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-
-type Todo = {
-  id: number;
-  title: string;
-  completed: string;
-  userId: number;
-};
-
-const queryTodos = (): Promise<Todo[]> =>
-  fetch("https://jsonplaceholder.typicode.com/todos").then((response) => {
-    if (!response.ok) {
-      throw new Error(`Error ${response.status}`);
-    }
-    return response.json();
-  });
+import useTodos from "./hooks/useTodos";
 
 export default function App() {
-  const { data, error, isLoading } = useQuery({
-    queryKey: ["todos"],
-    queryFn: queryTodos,
-  });
+  const { data, error, isLoading } = useTodos();
 
   if (error) {
     return <h2>{error.message} :(</h2>;
