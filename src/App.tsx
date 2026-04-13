@@ -9,7 +9,7 @@ type Todo = {
 };
 
 const queryTodos = (): Promise<Todo[]> =>
-  fetch("https://jsonplaceholder.typicode.com/todosx").then((response) => {
+  fetch("https://jsonplaceholder.typicode.com/todos").then((response) => {
     if (!response.ok) {
       throw new Error(`Error ${response.status}`);
     }
@@ -17,13 +17,17 @@ const queryTodos = (): Promise<Todo[]> =>
   });
 
 export default function App() {
-  const { data, error } = useQuery({
+  const { data, error, isLoading } = useQuery({
     queryKey: ["todos"],
     queryFn: queryTodos,
   });
 
   if (error) {
     return <h2>{error.message} :(</h2>;
+  }
+
+  if (isLoading) {
+    return <h2>Loading...</h2>;
   }
 
   return (
