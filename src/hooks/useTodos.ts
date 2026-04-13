@@ -16,9 +16,11 @@ const queryTodos = (): Promise<Todo[]> =>
   });
 
 function useTodos() {
+  // la que sigue es una query local y tiene una configuración en particular y no para todas las queries de la App
   return useQuery({
     queryKey: ["todos"],
     queryFn: queryTodos,
+    refetchOnMount: false,
   });
 }
 
