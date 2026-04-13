@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
 type Todo = {
@@ -7,20 +8,22 @@ type Todo = {
   userId: number;
 };
 
-export default function App() {
-  const [data, setData] = useState<Todo[]>([]);
+const queryTodos = (): Promise<Todo[]> =>
+  fetch("https://jsonplaceholder.typicode.com/todos").then((response) =>
+    response.json(),
+  );
 
-  useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/todos")
-      .then((response) => response.json() as Promise<Todo[]>)
-      .then((json) => setData(json));
-  }, []);
+export default function App() {
+  const { data } = useQuery({
+    queryKey: ["todos"],
+    queryFn: queryTodos,
+  });
 
   return (
     <>
       <h2>Todos</h2>
       <ul>
-        {data.map((todo) => (
+        {data?.map((todo) => (
           <li key={todo.id}>{todo.title}</li>
         ))}
       </ul>
