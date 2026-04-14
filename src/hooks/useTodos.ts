@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 type Todo = {
   id: number;
@@ -8,17 +9,10 @@ type Todo = {
 };
 
 const queryTodos = (userId: number | undefined): Promise<Todo[]> => {
-  const url = "https://jsonplaceholder.typicode.com/todos?";
+  const url = "https://jsonplaceholder.typicode.com/todos";
 
-  const queryParams = userId
-    ? new URLSearchParams({ userId: String(userId) })
-    : "";
-
-  return fetch(url + queryParams).then((response) => {
-    if (!response.ok) {
-      throw new Error(`Error ${response.status}`);
-    }
-    return response.json();
+  return axios.get(url, { params: { userId } }).then((response) => {
+    return response.data;
   });
 };
 
