@@ -13,18 +13,18 @@ export default function App() {
   const titleRef = useRef<HTMLInputElement>(null);
   const bodyRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: (post: Post) =>
       axios
         .post<Post>("https://jsonplaceholder.typicode.com/posts", post)
         .then((response) => response.data),
-    onSuccess: (savedPost, newPost) => {
-      queryClient.setQueryData<Post[]>(["post"], (post = []) => [
+    onSuccess: (savedPost) => {
+      queryClient.setQueryData<Post[]>(["posts"], (post = []) => [
         savedPost,
         ...post,
       ]);
 
-      // queryClient.invalidateQueries({ queryKey: ["posts"] }); // ir a buscar todo al servidor nuevamente, en este caso no es necesario porque ya tenemos el post guardado en la respuesta de la mutación, pero si queremos ir a buscar todo al servidor nuevamente, por ejemplo para obtener el id generado por el servidor, entonces si sería necesario invalidar la query para que se vuelva a ejecutar y obtener los datos actualizados del servidor
+      //queryClient.invalidateQueries({ queryKey: ["posts"] }); // ir a buscar todo al servidor nuevamente, en este caso no es necesario porque ya tenemos el post guardado en la respuesta de la mutación, pero si queremos ir a buscar todo al servidor nuevamente, por ejemplo para obtener el id generado por el servidor, entonces si sería necesario invalidar la query para que se vuelva a ejecutar y obtener los datos actualizados del servidor
     },
   });
 
@@ -58,7 +58,7 @@ export default function App() {
           <input ref={bodyRef} type="text" placeholder="Cuerpo" />
         </div>
         <div>
-          <button>Enviar</button>
+          <button>{isPending ? "Creando..." : "Enviar"}</button>
         </div>
       </form>
       {isLoading && <p>Cargando...</p>}
