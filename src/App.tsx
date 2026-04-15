@@ -13,7 +13,7 @@ export default function App() {
   const titleRef = useRef<HTMLInputElement>(null);
   const bodyRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
-  const { mutate, isPending } = useMutation({
+  const { mutate, isPending, error } = useMutation({
     mutationFn: (post: Post) =>
       axios
         .post<Post>("https://jsonplaceholder.typicode.com/posts", post)
@@ -67,6 +67,7 @@ export default function App() {
           <button disabled={isPending}>
             {isPending ? "Creando..." : "Enviar"}
           </button>
+          {error && <span>{error.message}</span>}
         </div>
       </form>
       {isLoading && <p>Cargando...</p>}
